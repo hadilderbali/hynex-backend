@@ -1,0 +1,41 @@
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                echo 'Source code checked out successfully.'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'chmod +x mvnw'
+                sh './mvnw -B -DskipTests compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh './mvnw -B test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh './mvnw -B -DskipTests package'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'HYNEX backend pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check the stage logs.'
+        }
+    }
+}
