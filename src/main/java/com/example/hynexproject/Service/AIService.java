@@ -12,7 +12,7 @@ import java.util.Map;
 @Service
 public class AIService {
 
-  @Value("${GROQ_API_KEY}")
+  @Value("${groq.api.key}")
   private String apiKey;
 
   @Value("${groq.api.url}")
