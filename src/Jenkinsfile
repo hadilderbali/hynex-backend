@@ -13,24 +13,34 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'chmod +x mvnw'
-                sh './mvnw -B -DskipTests compile'
+                withCredentials([string(
+                    credentialsId: 'groq-api-key',
+                    variable: 'GROQ_API_KEY'
+                )]) {
+                    sh './mvnw -B -DskipTests compile'
+                }
             }
         }
 
         stage('Test') {
-    steps {
-        withCredentials([string(
-            credentialsId: 'groq-api-key',
-            variable: 'GROQ_API_KEY'
-        )]) {
-            sh './mvnw -B test'
+            steps {
+                withCredentials([string(
+                    credentialsId: 'groq-api-key',
+                    variable: 'GROQ_API_KEY'
+                )]) {
+                    sh './mvnw -B test'
+                }
+            }
         }
-    }
-}
 
         stage('Package') {
             steps {
-                sh './mvnw -B -DskipTests package'
+                withCredentials([string(
+                    credentialsId: 'groq-api-key',
+                    variable: 'GROQ_API_KEY'
+                )]) {
+                    sh './mvnw -B -DskipTests package'
+                }
             }
         }
     }
