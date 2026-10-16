@@ -18,10 +18,15 @@ pipeline {
         }
 
         stage('Test') {
-            steps {
-                sh './mvnw -B test'
-            }
+    steps {
+        withCredentials([string(
+            credentialsId: 'groq-api-key',
+            variable: 'GROQ_API_KEY'
+        )]) {
+            sh './mvnw -B test'
         }
+    }
+}
 
         stage('Package') {
             steps {
