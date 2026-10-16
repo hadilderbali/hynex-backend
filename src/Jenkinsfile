@@ -44,7 +44,11 @@ pipeline {
             }
         }
     }
-
+    stage('Docker Build') {
+    steps {
+        sh 'docker build -t hynex-backend:${BUILD_NUMBER} .'
+    }
+}
     post {
         success {
             echo 'HYNEX backend pipeline completed successfully!'
