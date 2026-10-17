@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,20 +19,11 @@ spec:
           image: hynex-backend:placeholder
           imagePullPolicy: Never
           ports:
-            - containerPort: 8087
+            - name: http
+              containerPort: 8087
           env:
             - name: SPRING_DATASOURCE_URL
               valueFrom:
                 configMapKeyRef:
                   name: hynex-config
                   key: datasource-url
-            - name: SPRING_DATASOURCE_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: hynex-secrets
-                  key: db-username
-            - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: hynex-secrets
-                  key: db-password
