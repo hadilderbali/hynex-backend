@@ -19,24 +19,43 @@ spec:
         - name: hynex-backend
           image: hynex-backend:placeholder
           imagePullPolicy: IfNotPresent
+
           ports:
             - name: http
               containerPort: 8087
+
           env:
             - name: SPRING_DATASOURCE_URL
               valueFrom:
                 configMapKeyRef:
                   name: hynex-config
                   key: datasource-url
+
             - name: GROQ_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: hynex-runtime-secrets
                   key: groq-api-key
-          readinessProbe:
-            tcpSocket:
+
+          startupProbe:
+            httpGet:
+              path: /actuator/health
               port: http
-            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 30
+
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: http
             periodSeconds: 5
-            timeoutSeconds: 2
-            failureThreshold: 12
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
