@@ -23,4 +23,17 @@ spec:
             - containerPort: 8087
           env:
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:mysql://172.18.0.3:3306/hynex_client_finder"
+              valueFrom:
+                configMapKeyRef:
+                  name: hynex-config
+                  key: datasource-url
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: hynex-secrets
+                  key: db-username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hynex-secrets
+                  key: db-password
