@@ -1,0 +1,26 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hynex-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hynex-backend
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: hynex-backend
+    spec:
+      containers:
+        - name: hynex-backend
+          image: hynex-backend:placeholder
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8087
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://172.18.0.3:3306/hynex_client_finder"
