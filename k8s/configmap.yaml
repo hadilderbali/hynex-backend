@@ -4,5 +4,5 @@ metadata:
   name: hynex-config
   namespace: hynex
 data:
-  datasource-url: "jdbc:mysql://172.18.0.3:3306/hynex_client_finder"
+  datasource-url: "jdbc:mysql://10.0.2.15:3307/hynex_client_finder"
 
