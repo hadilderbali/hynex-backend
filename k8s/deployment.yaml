@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hynex-backend
+  namespace: hynex
 spec:
   replicas: 1
   selector:
@@ -17,7 +18,7 @@ spec:
       containers:
         - name: hynex-backend
           image: hynex-backend:placeholder
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - name: http
               containerPort: 8087
@@ -27,3 +28,15 @@ spec:
                 configMapKeyRef:
                   name: hynex-config
                   key: datasource-url
+            - name: GROQ_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: hynex-runtime-secrets
+                  key: groq-api-key
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 12
