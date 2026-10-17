@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: hynex-config
+  namespace: hynex
 data:
   datasource-url: "jdbc:mysql://172.18.0.3:3306/hynex_client_finder"
 
