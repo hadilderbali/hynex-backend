@@ -43,6 +43,22 @@ pipeline {
             }
         }
 
+                /*
+        // SonarQube server named "SonarQube".
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh '''
+                        ./mvnw -B \
+                            org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                            -Dsonar.projectKey=hynex-backend
+                    '''
+                }
+            }
+        }
+        */
+
         stage('Package') {
             steps {
                 withCredentials([
