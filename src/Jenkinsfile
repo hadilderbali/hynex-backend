@@ -78,6 +78,7 @@ pipeline {
             }
         }
 
+        
         stage('Trivy Security Scan') {
             steps {
                 sh '''
@@ -89,6 +90,8 @@ pipeline {
                         -v trivy-cache:/root/.cache/ \
                         aquasec/trivy:0.76.0 \
                         image \
+                        --timeout 20m \
+                        --no-progress \
                         --docker-host unix:///var/run/docker.sock \
                         --image-src docker \
                         --scanners vuln,secret \
