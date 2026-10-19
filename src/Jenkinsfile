@@ -87,7 +87,7 @@ pipeline {
             }
         }
 
-        /*
+        
         stage('Trivy Security Scan') {
             steps {
                 sh '''
@@ -112,7 +112,7 @@ pipeline {
                 '''
             }
         }
-        */
+        
 
         stage('Docker Push') {
             steps {
