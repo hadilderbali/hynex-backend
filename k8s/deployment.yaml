@@ -25,17 +25,17 @@ spec:
               containerPort: 8087
 
           env:
-            - name: SPRING_DATASOURCE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: hynex-config
-                  key: datasource-url
-
-            - name: GROQ_API_KEY
+            - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: hynex-runtime-secrets
-                  key: groq-api-key
+                  key: db-username
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hynex-runtime-secrets
+                  key: db-password
 
           startupProbe:
             httpGet:
