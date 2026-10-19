@@ -51,6 +51,37 @@ pipeline {
             }
         }
 
+      stage('OWASP Dependency-Check') {
+            steps {
+                withCredentials([
+                    string(
+                        credentialsId: 'nvd-api-key',
+                        variable: 'NVD_API_KEY'
+                    )
+                ]) {
+                    sh '''
+                        set -eu
+
+                        echo "Starting OWASP Dependency-Check..."
+
+                        ./mvnw -B \
+                            org.owasp:dependency-check-maven:13.0.0:check \
+                            -DnvdApiKeyEnvironmentVariable=NVD_API_KEY \
+                            -Dformats=HTML,JSON \
+                            -DfailBuildOnCVSS=11
+                    '''
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts(
+                        artifacts: 'target/dependency-check-report.html,target/dependency-check-report.json',
+                        allowEmptyArchive: true
+                    )
+                }
+            }
+        }
+
         /*
         // FUTURE: Enable after configuring SonarQube in Jenkins.
         // SonarQube server named "SonarQube".
