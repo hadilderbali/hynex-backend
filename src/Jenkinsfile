@@ -223,8 +223,8 @@ pipeline {
                 '''
             }
         }
-    }
-            stage('Smoke Test') {
+    
+        stage('Smoke Test') {
             steps {
                 sh '''
                     set -eu
@@ -248,6 +248,7 @@ pipeline {
                 '''
             }
         }
+    }
 
     post {
         success {
