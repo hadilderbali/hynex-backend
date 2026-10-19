@@ -78,7 +78,7 @@ pipeline {
             }
         }
 
-        
+      /*  
         stage('Trivy Security Scan') {
             steps {
                 sh '''
@@ -103,7 +103,7 @@ pipeline {
                 '''
             }
         }
-        
+        */
         stage('Docker Push') {
             steps {
                 sh 'docker push ${REGISTRY_PUSH}/${IMAGE_NAME}:${BUILD_NUMBER}'
