@@ -193,6 +193,30 @@ pipeline {
             }
         }
     }
+            stage('Smoke Test') {
+            steps {
+                sh '''
+                    set -eu
+
+                    APP_URL="http://10.0.2.15:30087"
+
+                    echo "Checking HYNEX health..."
+                    curl --retry 5 \
+                         --retry-delay 3 \
+                         --retry-connrefused \
+                         --fail --silent --show-error \
+                         "$APP_URL/actuator/health"
+
+                    echo
+                    echo "Checking Prometheus metrics..."
+                    curl --fail --silent --show-error \
+                         "$APP_URL/actuator/prometheus" \
+                         | grep -q '^# HELP '
+
+                    echo "Smoke tests passed."
+                '''
+            }
+        }
 
     post {
         success {
