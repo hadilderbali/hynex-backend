@@ -250,19 +250,60 @@ pipeline {
         }
     }
 
-    post {
-        success {
-            echo 'HYNEX CI/CD pipeline and Kubernetes deployment completed successfully!'
-        }
+post {
+    always {
+        script {
+            def resultPayload = [
+                jobName: env.JOB_NAME ?: 'Hynex_Job',
+                buildNumber: env.BUILD_NUMBER ?: 'unknown',
+                status: currentBuild.currentResult ?: 'UNKNOWN',
+                stage: 'Pipeline result',
+                buildUrl: env.BUILD_URL ?: ''
+            ]
 
-        failure {
-            echo 'Pipeline failed. Inspect the failed stage and Kubernetes diagnostics.'
+            writeFile(
+                file: 'n8n-payload.json',
+                text: groovy.json.JsonOutput.toJson(resultPayload)
+            )
 
             sh '''
-                kubectl get pods -l app=hynex-backend -o wide || true
-                kubectl describe deployment/hynex-backend || true
-                kubectl logs -l app=hynex-backend --all-containers=true --tail=80 || true
+                if ! curl --silent --show-error --fail --max-time 10 \
+                    -X POST 'http://172.17.0.1:5678/webhook/hynex-build-result' \
+                    -H 'Content-Type: application/json' \
+                    --data-binary @n8n-payload.json; then
+                    echo "WARNING: Could not send build result to n8n."
+                fi
             '''
         }
     }
+
+    success {
+        echo 'HYNEX pipeline completed successfully.'
+    }
+
+    failure {
+        echo 'HYNEX pipeline failed. Collecting Kubernetes diagnostics.'
+
+        sh '''
+            echo "===== Kubernetes Pods ====="
+            kubectl -n hynex get pods -o wide || true
+
+            echo "===== Deployment Description ====="
+            kubectl -n hynex describe deployment/hynex-backend || true
+
+            echo "===== Application Logs ====="
+            for POD in $(kubectl -n hynex get pods -o name 2>/dev/null \
+                | grep 'pod/hynex-backend-' || true); do
+
+                echo "===== Current logs: $POD ====="
+                kubectl -n hynex logs "$POD" \
+                    --all-containers=true --tail=80 || true
+
+                echo "===== Previous logs: $POD ====="
+                kubectl -n hynex logs "$POD" \
+                    --all-containers=true --previous --tail=80 || true
+            done
+        '''
+    }
+}
 }
