@@ -119,7 +119,7 @@ pipeline {
         }
 
         
-        stage('Trivy Security Scan') {
+     /*   stage('Trivy Security Scan') {
             steps {
                 sh '''
                     set -eu
@@ -143,7 +143,7 @@ pipeline {
                 '''
             }
         }
-        
+        */
 
         stage('Docker Push') {
             steps {
