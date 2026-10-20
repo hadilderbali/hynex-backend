@@ -248,6 +248,14 @@ pipeline {
                 '''
             }
         }
+        
+stage('Test Failure') {
+    steps {
+        echo 'Testing HYNEX failure notification...'
+        error('TEST FAILURE: Simulating a failed build for n8n.')
+    }
+}
+
     }
 
 post {
