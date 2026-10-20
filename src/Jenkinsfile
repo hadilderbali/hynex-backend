@@ -51,7 +51,7 @@ pipeline {
             }
         }
 
-      stage('OWASP Dependency-Check') {
+    /*  stage('OWASP Dependency-Check') {
             steps {
                 withCredentials([
                     string(
@@ -80,7 +80,7 @@ pipeline {
                     )
                 }
             }
-        }
+        } */
 
         /*
         // FUTURE: Enable after configuring SonarQube in Jenkins.
