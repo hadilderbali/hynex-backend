@@ -6,6 +6,9 @@ An end-to-end DevOps project combining CI/CD automation, containerization, Kuber
 The goal is not only to automate software delivery, but also to make pipeline failures easier to investigate through intelligent, automated reporting.
 
 ## Architecture
+<p align="center">
+  <img src="Cloud-architecture%20(1).gif" alt="HYNEX DevOps Architecture" width="900">
+</p>
 
 The project connects the following components into a unified workflow:
 
